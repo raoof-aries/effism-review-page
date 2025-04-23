@@ -363,16 +363,29 @@
         background-color: var(--bg-light);
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        white-space: nowrap;
+        min-width: 11rem;
+      }
+
+      .daily-stat-label,
+      .daily-stat-value {
+        flex-basis: 50%;
+        flex-grow: 0;
+        flex-shrink: 0;
+        white-space: nowrap;
       }
 
       .daily-stat-label {
-        font-size: 13px;
+        font-size: 0.82rem;
         color: var(--text-medium);
       }
 
       .daily-stat-value {
+        font-size: 0.85rem;
         font-weight: 500;
         color: var(--text-dark);
+        text-align: right;
       }
 
       .date-action-btn-container {
@@ -484,9 +497,9 @@
             <p class="profile-id">Employee Code: AG00005985</p>
             <p class="profile-designation">Jr. Front end Developer</p>
             <div class="profile-contact">
-              <div class="contact-item"><i>📧</i> raoof@ariessolutions.com</div>
-              <div class="contact-item"><i>📱</i> +91-9495217141</div>
-              <div class="contact-item"><i>📍</i> KOCHI</div>
+              <div class="contact-item">📧 raoof@ariessolutions.com</div>
+              <div class="contact-item">📱 +91-9495217141</div>
+              <div class="contact-item">📍 KOCHI</div>
             </div>
           </div>
         </div>
@@ -714,7 +727,7 @@
       <!-- Remarks & Review Section (Added before Work Plan) -->
       <div class="card remarks-section">
         <div class="card-header">
-          <h2 class="section-title"><i>💬</i> Feedback & Reviews</h2>
+          <h2 class="section-title">Feedback & Reviews</h2>
           <div class="remarks-tabs">
             <div class="remarks-tab active">Remarks Given To</div>
             <div class="remarks-tab">Remarks Given By</div>
