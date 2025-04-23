@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard - EFFISM</title>
+  <style>
+    :root {
+      --primary: #055e6f;
+      --primary-light: #089bb8;
+      --primary-dark: #055e6f;
+      --accent-blue: #055e6f;
+      --primary-gradient: linear-gradient(135deg, #055e6f 0%, #089bb8 100%);
+      --secondary: #f8fafc;
+      --success: #10b981;
+      --accent: #10b981;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --text: #1e293b;
+      --text-dark: #0f172a;
+      --text-medium: #475569;
+      --text-light: #94a3b8;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-light: #e2e8f0;
+      --shadow-sm: rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow: rgba(0, 0, 0, 0.08);
+      --radius: 0.55rem;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --pending: #f59e0b;
+      --progress: #3b82f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .profile-info {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+    }
+
+    .profile-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .profile-id {
+      color: var(--text-medium);
+      font-size: 14px;
+    }
+
+    .profile-designation {
+      color: var(--primary);
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .profile-contact {
+      margin-top: 5px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-medium);
+    }
+
+    .contact-item i {
+      color: var(--primary);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--shadow-md);
+      opacity: 0.9;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-medium);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-white);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 0 10px var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-title {
+      font-size: 13px;
+      color: var(--text-medium);
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .stat-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 0 10px var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .chart-container {
+      height: 250px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pie-chart {
+      width: 180px;
+      height: 180px;
+    }
+
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-left: 20px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    .legend-label {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+
+    .legend-value {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .daily-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .daily-stat-item {
+      padding: 10px;
+      border-radius: var(--radius);
+      background-color: var(--bg-light);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .daily-stat-label {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+
+    .daily-stat-value {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      background-color: var(--bg-light);
+      color: var(--text-medium);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text);
+    }
+
+    tr:hover {
+      background-color: var(--bg-light);
+    }
+
+    .status-pill {
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .status-completed {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .status-pending {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--pending);
+    }
+
+    .status-progress {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--progress);
+    }
+
+    .action-btn {
+      padding: 5px;
+      border-radius: var(--radius);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-medium);
+    }
+
+    .action-btn:hover {
+      color: var(--primary);
+      background-color: var(--bg-light);
+    }
+
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .date-display {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      background-color: var(--bg-white);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-medium);
+      position: relative;
+    }
+
+    .tab.active {
+      color: var(--primary);
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary);
+    }
+
+    .work-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+
+    .info-value {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .time-entries {
+      margin-top: 20px;
+    }
+
+    .view-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .view-link:hover {
+      text-decoration: underline;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background-color: var(--bg-light);
+      color: var(--text-medium);
+      cursor: pointer;
+    }
+
+    .icon-btn:hover {
+      background-color: var(--primary-light);
+      color: white;
+    }
+
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    .task-table tr td:last-child,
+    .task-table tr th:last-child {
+      text-align: right;
+    }
+
+    .task-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    
+    .task-status.completed {
+      background-color: var(--success);
+    }
+    
+    .task-status.pending {
+      background-color: var(--warning);
+    }
+    
+    .task-status.progress {
+      background-color: var(--progress);
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+
+    .review-section {
+      margin-top: 20px;
+    }
+
+    .review-options {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .review-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-option input[type="radio"] {
+      accent-color: var(--primary);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      resize: vertical;
+      min-height: 100px;
+      margin-top: 16px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-light);
+    }
+
+    .btn-submit {
+      margin-top: 16px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      padding: 10px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      box-shadow: var(--shadow-md);
+      opacity: 0.9;
+    }
+
+    @media (max-width: 1200px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-info {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .daily-stats {
+        grid-template-columns: 1fr;
+      }
+      .work-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <img src="/api/placeholder/120/120" alt="Employee Photo" class="profile-photo">
+        <div class="profile-details">
+          <h1 class="profile-name">Abdul Raoof</h1>
+          <p class="profile-id">Employee Code: AG00005985</p>
+          <p class="profile-designation">Jr. Front end Developer</p>
+          <div class="profile-contact">
+            <div class="contact-item">
+              <i>📧</i> raoof@ariessolutions.com
+            </div>
+            <div class="contact-item">
+              <i>📱</i> +91-9495217141
+            </div>
+            <div class="contact-item">
+              <i>📍</i> KOCHI
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-outline">View Profile</button>
+        <button class="btn btn-primary">View D&R</button>
+      </div>
+    </div>
+
+    <!-- Date Navigation -->
+    <div class="date-nav">
+      <button class="icon-btn">
+        <div class="btn-icon">◀</div>
+      </button>
+      <div class="date-display">
+        <i>📅</i> 12-04-2025
+      </div>
+      <button class="icon-btn">
+        <div class="btn-icon">▶</div>
+      </button>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-title">Total Working Hours</div>
+        <div class="stat-value">78:04:00</div>
+        <div class="stat-badge badge-success">This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Total Working Days</div>
+        <div class="stat-value">9</div>
+        <div class="stat-badge badge-success">This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Late Reporting</div>
+        <div class="stat-value">0</div>
+        <div class="stat-badge badge-success">This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Achieved Training Hours</div>
+        <div class="stat-value">4:19</div>
+        <div class="stat-badge badge-warning">2025</div>
+      </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="two-column">
+      <!-- Left Column - Task Tables -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Work Plan</h2>
+          <div class="tabs">
+            <div class="tab active">Newly Identified Jobs</div>
+            <div class="tab">Routine Jobs</div>
+            <div class="tab">All Tasks</div>
+          </div>
+        </div>
+        
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Task</th>
+              <th>Type</th>
+              <th>Job</th>
+              <th>Est Time</th>
+              <th>Act Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>EFFISM Review page: User details section design research</td>
+              <td>Invoiceable Web Design</td>
+              <td>EFFISM/2020/ESOL/EFFISM</td>
+              <td>01:00:00</td>
+              <td>00:45:00</td>
+              <td><span class="status-pill status-completed">Completed</span></td>
+              <td>
+                <div class="task-actions">
+                  <button class="icon-btn"><div class="btn-icon">✏️</div></button>
+                  <button class="icon-btn"><div class="btn-icon">🗑️</div></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>EFFISM Review page: User details section development</td>
+              <td>Invoiceable Website Development</td>
+              <td>EFFISM/2020/ESOL/EFFISM</td>
+              <td>02:00:00</td>
+              <td>01:30:00</td>
+              <td><span class="status-pill status-progress">In Progress</span></td>
+              <td>
+                <div class="task-actions">
+                  <button class="icon-btn"><div class="btn-icon">✏️</div></button>
+                  <button class="icon-btn"><div class="btn-icon">🗑️</div></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>EFFISM Review page: Time details section design research</td>
+              <td>Invoiceable Web Design</td>
+              <td>EFFISM/2020/ESOL/EFFISM</td>
+              <td>01:00:00</td>
+              <td>00:00:00</td>
+              <td><span class="status-pill status-pending">Pending</span></td>
+              <td>
+                <div class="task-actions">
+                  <button class="icon-btn"><div class="btn-icon">✏️</div></button>
+                  <button class="icon-btn"><div class="btn-icon">🗑️</div></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="text-align: right; margin-top: 20px;">
+          <p><strong>Total: 08:10:00</strong></p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+          <button class="btn btn-outline">Weekly Plan</button>
+          <button class="btn btn-outline">Monthly Plan</button>
+          <button class="btn btn-outline">Last Day Summary</button>
+          <button class="btn btn-primary">Delegate Job</button>
+        </div>
+      </div>
+
+      <!-- Right Column - Chart & Daily Stats -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Work Distribution</h2>
+          </div>
+          <div class="chart-container">
+            <div class="pie-chart">
+              <!-- SVG Pie Chart Placeholder -->
+              <svg width="180" height="180" viewBox="0 0 180 180">
+                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#e2e8f0" stroke-width="20" />
+                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#055e6f" stroke-width="20" stroke-dasharray="377 503" stroke-dashoffset="0" />
+                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#10b981" stroke-width="20" stroke-dasharray="75.4 503" stroke-dashoffset="-377" />
+                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#f59e0b" stroke-width="20" stroke-dasharray="25.15 503" stroke-dashoffset="-452.4" />
+                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#ef4444" stroke-width="20" stroke-dasharray="25.15 503" stroke-dashoffset="-477.55" />
+                <text x="90" y="90" text-anchor="middle" alignment-baseline="middle" font-size="24" font-weight="bold" fill="#1e293b">75%</text>
+                <text x="90" y="110" text-anchor="middle" alignment-baseline="middle" font-size="12" fill="#475569">Invoiceable</text>
+              </svg>
+            </div>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #055e6f;"></div>
+                <div class="legend-label">Invoiceable</div>
+                <div class="legend-value">75%</div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #10b981;"></div>
+                <div class="legend-label">Non-Invoiceable</div>
+                <div class="legend-value">15%</div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #f59e0b;"></div>
+                <div class="legend-label">Personal</div>
+                <div class="legend-value">5%</div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background-color: #ef4444;"></div>
+                <div class="legend-label">Marketing</div>
+                <div class="legend-value">5%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Metrics -->
+        <div class="card" style="margin-top: 20px;">
+          <div class="card-header">
+            <h2 class="card-title">Today's Metrics</h2>
+          </div>
+          <div class="daily-stats">
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Break:</div>
+              <div class="daily-stat-value">00:10:00</div>
+            </div>
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Extra Break:</div>
+              <div class="daily-stat-value">00:05:00</div>
+            </div>
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Health:</div>
+              <div class="daily-stat-value">02:00:00</div>
+            </div>
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Punch In:</div>
+              <div class="daily-stat-value">08:47:30 AM</div>
+            </div>
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Punch Out:</div>
+              <div class="daily-stat-value">05:47:40 AM</div>
+            </div>
+            <div class="daily-stat-item">
+              <div class="daily-stat-label">Net Time:</div>
+              <div class="daily-stat-value">Work</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: space-between;">
+          <button class="btn btn-outline">
+            <div class="btn-icon">🏆</div>
+            Appreciation
+          </button>
+          <button class="btn btn-outline">
+            <div class="btn-icon">🔒</div>
+            Lock
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Section -->
+    <div class="card">
+      <h2 class="section-title">Review Findings</h2>
+      <div class="review-options">
+        <div class="review-option">
+          <input type="radio" id="excellent" name="review" value="excellent">
+          <label for="excellent">Excellent</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="verygood" name="review" value="verygood">
+          <label for="verygood">Very Good</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="good" name="review" value="good">
+          <label for="good">Good</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="needimprovement" name="review" value="needimprovement">
+          <label for="needimprovement">Need Improvement</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="poor" name="review" value="poor">
+          <label for="poor">Poor</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="observation" name="review" value="observation">
+          <label for="observation">Observation</label>
+        </div>
+        <div class="review-option">
+          <input type="radio" id="ncr" name="review" value="ncr">
+          <label for="ncr">N.C.R</label>
+        </div>
+      </div>
+      <textarea placeholder="Add remarks here..."></textarea>
+      <button class="btn-submit">Submit</button>
+    </div>
+
+    <!-- Review History -->
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header">
+        <h2 class="card-title">Review History</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Time</th>
+            <th>Superior Name</th>
+            <th>Rating</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>12-04-2025</td>
+            <td>Daily Auditing</td>
+            <td>08:47 AM</td>
+            <td>Basil Varghese</td>
+            <td>Good</td>
+            <td>Good job on completing the design research task ahead of schedule.</td>
+          </tr>
+          <tr>
+            <td>11-04-2025</td>
+            <td>Daily Auditing</td>
+            <td>10:40 AM</td>
+            <td>Basil Varghese</td>
+            <td>Good</td>
+            <td>Need to improve code documentation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
